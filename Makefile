@@ -1,4 +1,4 @@
-# term2048's Makefile
+# term2048-AI's Makefile
 #
 SRC=term2048
 
