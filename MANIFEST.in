@@ -3,4 +3,5 @@ include *.md
 include *.txt
 include README
 include LICENSE
+include LICENSE-term2048
 exclude *.pyc
