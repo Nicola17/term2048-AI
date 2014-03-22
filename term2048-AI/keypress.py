@@ -50,6 +50,7 @@ else:
         finally:
             termios.tcsetattr(__fd, termios.TCSADRAIN, __old)
 
+
     def getKey():
         """
         same as __getKey, but handle arrow keys

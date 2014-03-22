@@ -4,12 +4,14 @@ from __future__ import print_function
 import os
 import os.path
 import math
+import time
 
 from colorama import init, Fore, Style
 init(autoreset=True)
 
 from term2048 import keypress
 from term2048.board import Board
+from term2048.ia import IA
 
 
 class Game(object):
@@ -27,15 +29,15 @@ class Game(object):
     __clear = 'cls' if os.name == 'nt' else 'clear'
 
     COLORS = {
-        2:    Fore.GREEN,
-        4:    Fore.BLUE + Style.BRIGHT,
-        8:    Fore.CYAN,
-        16:   Fore.RED,
-        32:   Fore.MAGENTA,
-        64:   Fore.CYAN,
-        128:  Fore.BLUE + Style.BRIGHT,
-        256:  Fore.MAGENTA,
-        512:  Fore.GREEN,
+           2: Fore.GREEN,
+           4: Fore.BLUE + Style.BRIGHT,
+           8: Fore.CYAN,
+          16: Fore.RED,
+          32: Fore.MAGENTA,
+          64: Fore.CYAN,
+         128: Fore.BLUE + Style.BRIGHT,
+         256: Fore.MAGENTA,
+         512: Fore.GREEN,
         1024: Fore.RED,
         2048: Fore.YELLOW,
         # just in case people set an higher goal they still have colors
@@ -58,8 +60,8 @@ class Game(object):
     SCORES_FILE = '%s/.term2048.scores' % os.path.expanduser('~')
 
     def __init__(self, scores_file=SCORES_FILE, colors=COLORS,
-                 clear_screen=True,
-                 mode=None, azmode=False, **kws):
+            clear_screen=True,
+            mode=None, azmode=False, **kws):
         """
         Create a new game.
             scores_file: file to use for the best score (default
@@ -103,7 +105,7 @@ class Game(object):
             self.best_score = int(f.readline(), 10)
             f.close()
         except:
-            pass  # fail silently
+            pass # fail silently
 
     def saveBestScore(self):
         """
@@ -116,7 +118,7 @@ class Game(object):
             f.write(str(self.best_score))
             f.close()
         except:
-            pass  # fail silently
+            pass # fail silently
 
     def incScore(self, pts):
         """
@@ -149,7 +151,7 @@ class Game(object):
                     os.system(Game.__clear)
                 else:
                     print("\n")
-                print(self.__str__(margins={'left': 4, 'top': 4, 'bottom': 4}))
+                print(self.__str__(margins={'left':4, 'top':4, 'bottom':4}))
                 if self.board.won() or not self.board.canMove():
                     break
                 m = self.readMove()
@@ -162,8 +164,33 @@ class Game(object):
         self.saveBestScore()
         print('You won!' if self.board.won() else 'Game Over')
         return self.score
+        
+    def loopIA(self,sleep_time=0.1):
+        """
+        main game loop. returns the final score.
+        """
+        try:
+            while True:
+                if self.clear_screen:
+                    os.system(Game.__clear)
+                else:
+                    print("\n")
+                print(self.__str__(margins={'left':4, 'top':4, 'bottom':4}))
+                if self.board.won() or not self.board.canMove():
+                    break
+                m = IA.nextMove(self.board)
+                self.incScore(self.board.move(m))
+                time.sleep(0.01)
 
-    def getCellStr(self, x, y):  # TODO: refactor regarding issue #11
+        except KeyboardInterrupt:
+            self.saveBestScore()
+            return
+
+        self.saveBestScore()
+        print('You won!' if self.board.won() else 'Game Over')
+        return self.score
+
+    def getCellStr(self, x, y): # TODO: refactor regarding issue #11
         """
         return a string representation of the cell located at x,y.
         """
@@ -171,9 +198,9 @@ class Game(object):
 
         az = {}
         for i in range(1, int(math.log(self.board.goal(), 2))):
-            az[2 ** i] = chr(i + 96)
+            az[2**i] = chr(i+96)
 
-        if c == 0 and self.__azmode:
+        if c==0 and self.__azmode:
             return '.'
         elif c == 0:
             return '  .'
