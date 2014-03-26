@@ -2,7 +2,7 @@ from term2048.board import Board
 import random
 import copy
 
-class IA(object):
+class AI(object):
     def __str__(self, margins={}):
         return ""
         
@@ -34,7 +34,7 @@ class IA(object):
     
     @staticmethod
     def nextMove(board,recursion_depth=3):
-        m,s = IA.nextMoveRecur(board,recursion_depth,recursion_depth)
+        m,s = AI.nextMoveRecur(board,recursion_depth,recursion_depth)
         return m
         
     @staticmethod
@@ -46,9 +46,9 @@ class IA(object):
                 newBoard = copy.deepcopy(board)
                 newBoard.move(m,add_tile=True)
                 
-                score = IA.evaluate(newBoard)
+                score = AI.evaluate(newBoard)
                 if depth != 0:
-                    my_m,my_s = IA.nextMoveRecur(newBoard,depth-1,maxDepth)
+                    my_m,my_s = AI.nextMoveRecur(newBoard,depth-1,maxDepth)
                     score += my_s*pow(base,maxDepth-depth+1)
                     
                 if(score > bestScore):

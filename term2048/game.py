@@ -11,7 +11,7 @@ init(autoreset=True)
 
 from term2048 import keypress
 from term2048.board import Board
-from term2048.ia import IA
+from term2048.ia import AI
 
 
 class Game(object):
@@ -165,7 +165,7 @@ class Game(object):
         print('You won!' if self.board.won() else 'Game Over')
         return self.score
         
-    def loopIA(self,sleep_time=0.1):
+    def loopAI(self,sleep_time=0.1):
         """
         main game loop. returns the final score.
         """
@@ -178,7 +178,7 @@ class Game(object):
                 print(self.__str__(margins={'left':4, 'top':4, 'bottom':4}))
                 if self.board.won() or not self.board.canMove():
                     break
-                m = IA.nextMove(self.board)
+                m = AI.nextMove(self.board)
                 self.incScore(self.board.move(m))
                 time.sleep(0.01)
 

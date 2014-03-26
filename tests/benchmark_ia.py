@@ -5,7 +5,7 @@ out_file = open("benchmark.txt","w")
 
 for i in range(0,51):
     game = Game()
-    score = game.loopIA(sleep_time=0)
+    score = game.loopAI(sleep_time=0)
     maxVal = game.board.maxValue()
     won = game.board.won()
     out_file.write(str(i)+"\t")
