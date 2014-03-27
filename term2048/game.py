@@ -41,7 +41,7 @@ class Game(object):
         1024: Fore.RED,
         2048: Fore.YELLOW,
         # just in case people set an higher goal they still have colors
-        4096: Fore.RED,
+        4096: Fore.MAGENTA,
         8192: Fore.CYAN,
     }
 
@@ -213,6 +213,10 @@ class Game(object):
             s = ' 1k'
         elif c == 2048:
             s = ' 2k'
+        elif c == 4096:
+            s = ' 4k'
+        elif c == 8192:
+            s = ' 8k'
         else:
             s = '%3d' % c
 
